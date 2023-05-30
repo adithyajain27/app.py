@@ -1,0 +1,47 @@
+
+FROM python:3.8-slim-buster
+
+WORKDIR /app
+
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+EXPOSE 8080
+
+CMD [ "python", "./app.py" ]
+
+
+#employeeId: string,
+#    name: string,
+#   city: string
+
+
+employeeId = input()
+name = input()
+city = input()
+
+
+from flask import Flask, jsonify, request
+
+app = Flask(__name__)
+
+employees = {}
+
+@app.route('/employees', methods=['GET'])
+def get_employees():
+    return jsonify(employees)
+
+@app.route('/employees', methods=['POST'])
+def add_employee():
+    employee = request.json
+    employees[employee['id']] = employee
+    return jsonify(employee)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+
